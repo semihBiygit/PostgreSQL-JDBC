@@ -84,8 +84,8 @@ public class App {
 		App app = new App();
 //		app.connect();
 //		System.out.println(app.getActorCount());
-//		app.getActors();
-		app.findActorByID(31);
+		app.getActors();
+//		app.findActorByID(31);
 	
 	}
 }
