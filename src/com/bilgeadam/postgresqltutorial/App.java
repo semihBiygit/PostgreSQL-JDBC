@@ -80,12 +80,41 @@ public class App {
 
 	}
 
+	public long insertActor(Actor actor) {
+		String sql = "INSERT INTO actor (first_name,last_name) VALUES (?,?);";
+		long id = 0;
+
+		Connection conn = connect();
+		PreparedStatement pstmt;
+		try {
+			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, actor.getFirstName());
+			pstmt.setString(2, actor.getLastName());
+			int affectedRows = pstmt.executeUpdate();
+
+			if (affectedRows > 0) {
+				try (ResultSet rs = pstmt.getGeneratedKeys()) {
+					if (rs.next()) {
+						id = rs.getLong(1);
+					}
+				}
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return id;
+	}
+
 	public static void main(String[] args) {
 		App app = new App();
 //		app.connect();
 //		System.out.println(app.getActorCount());
 		app.getActors();
-//		app.findActorByID(31);
-	
+		app.findActorByID(69);
+//		app.insertActor(new Actor("Semih", "Biygit"));
+		
 	}
 }
