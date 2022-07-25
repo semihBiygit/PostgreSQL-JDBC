@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class App {
 
@@ -108,6 +109,28 @@ public class App {
 		return id;
 	}
 
+	public void insertActors(List<Actor> list) {
+		String sql = "INSERT INTO actor (first_name,last_name) VALUES (?,?);";
+
+		try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+			int count = 0;
+			for (Actor actor : list) {
+				pstmt.setString(1, actor.getFirstName());
+				pstmt.setString(2, actor.getLastName());
+
+				pstmt.addBatch();
+				count++;
+
+				if (count % 100 == 0 || count == list.size()) {
+					pstmt.executeBatch();
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) {
 		App app = new App();
 //		app.connect();
@@ -115,6 +138,6 @@ public class App {
 		app.getActors();
 		app.findActorByID(69);
 //		app.insertActor(new Actor("Semih", "Biygit"));
-		
+
 	}
 }
